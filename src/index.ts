@@ -1,14 +1,12 @@
 import 'dotenv/config';
-import sequelize from './config';
+import express from 'express';
+import blogsRouter from './routes/blogs';
 
-const main = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-    await sequelize.close();
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-};
+const app = express();
+app.use(express.json());
 
-void main();
+app.use('/api/blogs', blogsRouter);
+
+app.listen(3001, () => {
+  console.log('Running on 3001...');
+});
