@@ -1,55 +1,12 @@
-import 'dotenv/config';
-import { Sequelize, DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-
-const sequelize = new Sequelize(process.env.DB_URL, {
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  },
-  logging: false,
-});
-
-class Blog extends Model<InferAttributes<Blog>, InferCreationAttributes<Blog>> {
-  declare id: CreationOptional<number>;
-  declare author: string | null;
-  declare url: string;
-  declare title: string;
-  declare likes: CreationOptional<number>;
-}
-Blog.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    author: DataTypes.TEXT,
-    url: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    title: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    likes: DataTypes.INTEGER,
-  },
-  {
-    sequelize,
-    modelName: 'blog',
-    tableName: 'blogs',
-    timestamps: false,
-    underscored: true,
-  }
-);
+import sequelize, { setLogging } from './config';
+import { Blog } from './models';
 
 const main = async () => {
   try {
+    setLogging(false);
     await sequelize.authenticate();
 
-    const allBlogs = await Blog.findAll();
+    const allBlogs = await Blog.findAll({ logging: false });
     allBlogs.forEach(blog => {
       const authorText = blog.author ? `${blog.author}: ` : '';
       console.log(`${authorText}${blog.title}, ${blog.likes} likes`);

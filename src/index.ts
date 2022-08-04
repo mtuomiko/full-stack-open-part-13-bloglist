@@ -1,14 +1,5 @@
 import 'dotenv/config';
-import { Sequelize } from 'sequelize';
-
-const sequelize = new Sequelize(process.env.DB_URL, {
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  },
-});
+import sequelize from './config';
 
 const main = async () => {
   try {

@@ -28,6 +28,10 @@
     "quotes": [
       "error",
       "single"
+    ],
+    "eol-last": [
+      "error",
+      "always"
     ]
   },
   "parser": "@typescript-eslint/parser",
