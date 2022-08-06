@@ -2,17 +2,33 @@
 /* something with express v4 and handler promises */
 
 import { RequestHandler } from 'express';
+import { Op } from 'sequelize';
+import { Where } from 'sequelize/types/utils';
 
 import { Blog, User } from '../models';
+import { sequelize } from '../util/db';
 import { toNewBlogRequest, toUpdateBlogRequest } from '../util/validation';
 
-export const getAll: RequestHandler = async (_req, res) => {
+export const getAll: RequestHandler = async (req, res) => {
+  // if no search param, condition will remain empty (can be passed onwards but doesn't cause any condition)
+  let whereCondition: Where | Record<string, never> = {};
+
+  // If search param present, use sequelize Where instead. Could have also used ILIKE operator since using PG.
+  if (req.query.search) {
+    const lowerCaseSearch = (req.query.search as string).toLowerCase(); // TODO: enforce stringness?
+    whereCondition = sequelize.where(
+      sequelize.fn('LOWER', sequelize.col('title')),
+      { [Op.substring]: lowerCaseSearch }
+    );
+  }
+
   const blogs = await Blog.findAll({
     attributes: { exclude: ['userId'] },
     include: {
       model: User,
       attributes: ['id', 'username', 'name'],
-    }
+    },
+    where: whereCondition,
   });
 
   res.json(blogs);
