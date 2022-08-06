@@ -31,6 +31,9 @@ export const getAll: RequestHandler = async (req, res) => {
       attributes: ['id', 'username', 'name'],
     },
     where: whereClause,
+    order: [
+      ['likes', 'DESC']
+    ],
   });
 
   res.json(blogs);
@@ -93,4 +96,25 @@ export const updateLikes: RequestHandler = async (req, res) => {
   const updatedBlog = await req.blog.update({ likes: updateRequest.likes });
 
   res.json(updatedBlog);
+};
+
+// Get all authors of blogs and for each get the number of blogs, total likes of all their blogs and order descending
+// based on the likes.
+export const getAllAuthors: RequestHandler = async (_req, res) => {
+  const authors = await Blog.findAll({
+    attributes: [
+      'author',
+      [sequelize.fn('COUNT', sequelize.col('id')), 'blogs'],
+      [sequelize.fn('SUM', sequelize.col('likes')), 'likes'],
+    ],
+    group: 'author',
+    where: {
+      author: { [Op.not]: null }
+    },
+    order: [
+      sequelize.literal('likes DESC'), // a bit fragile (?) but works
+    ],
+  });
+
+  res.json(authors);
 };
