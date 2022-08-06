@@ -1,4 +1,4 @@
-export { };
+export { }; // what magic is this ?
 
 declare global {
   namespace NodeJS {

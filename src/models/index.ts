@@ -1,4 +1,6 @@
-import Blog from './Blog';
+import Blog from './blog';
+
+void Blog.sync();
 
 export {
   Blog

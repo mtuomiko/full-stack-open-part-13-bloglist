@@ -1,4 +1,4 @@
-import sequelize, { setLogging } from './config';
+import { sequelize, setLogging } from './util/db';
 import { Blog } from './models';
 
 const main = async () => {

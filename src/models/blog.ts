@@ -1,5 +1,5 @@
 import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import sequelize from '../config';
+import { sequelize } from '../util/db';
 
 class Blog extends Model<InferAttributes<Blog>, InferCreationAttributes<Blog>> {
   declare id: CreationOptional<number>;
@@ -24,7 +24,10 @@ Blog.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    likes: DataTypes.INTEGER,
+    likes: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {
     sequelize,

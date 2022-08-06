@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* something with express v4 and handler promises */
+/* some issue with express v4 and handler promises */
 
-import express from 'express';
-import { CreationAttributes } from 'sequelize/types';
-import { getAll, create, remove } from '../controllers/blogs';
-import { Blog } from '../models';
+import express, { RequestHandler } from 'express';
+
+import { getAll, create, remove, getById, updateLikes } from '../controllers/blogs';
+import { toNewBlogRequest, toUpdateBlogRequest } from '../util/validation';
 
 const router = express.Router();
 
@@ -15,25 +15,41 @@ router.get('/', async (_req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  try {
-    // not checking anything from the body, assume it has the needed data
-    const blog = await create(req.body as CreationAttributes<Blog>);
+  const newBlog = toNewBlogRequest(req.body);
+  const addedBlog = await create(newBlog);
 
-    res.json(blog);
-  } catch (error) {
-    res.status(400).json({ error });
-  }
+  res.json(addedBlog);
 });
 
-router.delete('/:id', async (req, res) => {
-  try {
-    // not handling conversion errors
-    await remove(Number(req.params.id));
+/*
+  Not handling blog not found errors here since we don't type safely guarantee a Blog will exist in the Request,
+  meaning any route handler using blogFinder will still need to verify the existance
+*/
+const blogFinder: RequestHandler = async (req, _res, next) => {
+  // not handling conversion errors or non-ints here
+  const id = Number(req.params.id);
+  const blog = await getById(id);
 
-    res.status(204).send();
-  } catch (error) {
-    res.status(400).json({ error });
-  }
+  if (blog) { req.blog = blog; }
+
+  next();
+};
+
+router.delete('/:id', blogFinder, async (req, res) => {
+  if (!req.blog) { throw { name: 'NotFound' }; }
+
+  await remove(req.blog);
+
+  res.status(204).send();
+});
+
+router.put('/:id', blogFinder, async (req, res) => {
+  if (!req.blog) { throw { name: 'NotFound' }; }
+
+  const updateRequest = toUpdateBlogRequest(req.body);
+  const updatedBlog = await updateLikes(req.blog, updateRequest);
+
+  res.json(updatedBlog);
 });
 
 export default router;
