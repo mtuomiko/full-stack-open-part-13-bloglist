@@ -1,5 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { CreationAttributes } from 'sequelize';
+import { Attributes, CreationAttributes } from 'sequelize';
 import { Blog, User } from '../models';
 
 /* blogs */
@@ -19,6 +19,9 @@ export interface UpdateUserRequest {
 
 // don't include incoming ids or passwordHash for new users, but include password
 export type NewUserRequest = Omit<CreationAttributes<User>, 'id' | 'passwordHash'> & { password: string };
+
+// exclude hash from outgoing users
+export type UserResponse = Omit<Attributes<User>, 'passwordHash'>;
 
 export interface LoginRequest {
   username: string;

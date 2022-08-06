@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 
 import { Blog, User } from '../models';
 import { toNewUserRequest, toUpdateUserRequest } from '../util/validation';
+import { UserResponse } from '../types/requests';
 
 const saltRounds = 10;
 
@@ -33,8 +34,9 @@ export const create: RequestHandler = async (req, res) => {
   };
 
   const createdUser = await User.create(newUser);
+  const userResponse = createUserResponse(createdUser);
 
-  res.json(createdUser);
+  res.json(userResponse);
 };
 
 /*
@@ -60,8 +62,19 @@ export const updateName: RequestHandler = async (req, res) => {
   if (!req.user) { throw { name: 'NotFound' }; }
 
   const updateUserRequest = toUpdateUserRequest(req.body);
-  const updatedBlog = await req.user.update({ name: updateUserRequest.name });
+  const updatedUser = await req.user.update({ name: updateUserRequest.name });
+  const userResponse = createUserResponse(updatedUser);
 
-  await req.user.save();
-  res.json(updatedBlog);
+  res.json(userResponse);
+};
+
+const createUserResponse = (user: User) => {
+  const userResponse: UserResponse = {
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
+  return userResponse;
 };
