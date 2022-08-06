@@ -10,6 +10,7 @@ FSO course [part 13](https://fullstackopen.com/en/part13)
 * `start` run built main entrypoint from `/build/`
 * `cli` run built CLI (exercise 13.3) from `/build/`
 
-## Environment variables
+## Environment variables (can be defined in `.env` file) 
 
-* `DB_URL` defined in `.env` file
+* `DB_URL` complete postgresql connection url
+* `PORT` port to the app on
