@@ -43,6 +43,7 @@ export const toNewBlogRequest = (obj: any): NewBlogRequest => {
   };
   if (obj.author) { newBlog.author = validateString(obj.author, 'author'); }
   if (obj.likes) { newBlog.likes = validateNumber(obj.likes, 'likes'); }
+  if (obj.year) { newBlog.year = validateNumber(obj.year, 'year'); }
 
   return newBlog;
 };
