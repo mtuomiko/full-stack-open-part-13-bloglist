@@ -1,6 +1,6 @@
 ## Full stack open part 13 bloglist backend
 
-FSO course [part 13](https://fullstackopen.com/en/part13)
+FSO course [part 13](https://fullstackopen.com/en/part13). Using TypeScript in
 
 ## NPM commands
 
@@ -12,5 +12,6 @@ FSO course [part 13](https://fullstackopen.com/en/part13)
 
 ## Environment variables (can be defined in `.env` file) 
 
-* `DB_URL` complete postgresql connection url
-* `PORT` port to the app on
+* `DB_URL` complete postgresql connection url, for example `postgres://user:pass@db.com:5432/database`
+* `PORT` port to run the app on
+* `JWT_SECRET` secret string for JWTs

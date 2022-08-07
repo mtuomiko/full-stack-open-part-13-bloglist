@@ -31,10 +31,12 @@ const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
   }
   if (error.name === 'SequelizeValidationError' ||
     error.name === 'SequelizeUniqueConstraintError' ||
+    error.name === 'SequelizeForeignKeyConstraintError' ||
     error.name === 'ValidationError'
   ) {
+    console.log(error);
     return res.status(400).json({
-      errors: mapErrors(error.errors)
+      errors: Array.isArray(error.errors) ? mapErrors(error.errors) : [error]
     });
   }
   if (error.name === 'Forbidden') {

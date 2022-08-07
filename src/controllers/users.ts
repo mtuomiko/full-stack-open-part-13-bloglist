@@ -5,7 +5,7 @@ import { RequestHandler } from 'express';
 import bcrypt from 'bcrypt';
 
 import { Blog, User } from '../models';
-import { toNewUserRequest, toUpdateUserRequest } from '../util/validation';
+import { stringToBoolean, toNewUserRequest, toUpdateUserRequest } from '../util/validation';
 import { UserResponse } from '../types/requests';
 
 const saltRounds = 10;
@@ -66,6 +66,33 @@ export const updateName: RequestHandler = async (req, res) => {
   const userResponse = createUserResponse(updatedUser);
 
   res.json(userResponse);
+};
+
+export const getOne: RequestHandler = async (req, res) => {
+  const bookReadWhereClause: { read?: boolean } = {};
+
+  if (req.query.read) {
+    const bookHasBeenRead = stringToBoolean(req.query.read as string); // TODO: check stringness
+
+    bookReadWhereClause.read = bookHasBeenRead;
+  }
+
+  const user = await User.findByPk(req.params.id, {
+    attributes: { exclude: ['passwordHash'] },
+    include: [
+      {
+        model: Blog,
+        as: 'readingList',
+        attributes: { exclude: ['userId'] },
+        through: {
+          attributes: ['id', 'read'],
+          where: bookReadWhereClause
+        },
+      }
+    ]
+  });
+
+  res.json(user);
 };
 
 const createUserResponse = (user: User) => {

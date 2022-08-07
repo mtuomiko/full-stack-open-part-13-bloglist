@@ -3,7 +3,7 @@ import 'express-async-errors';
 
 import { PORT } from './util/config';
 import { connectToDatabase } from './util/db';
-import { blogsRouter, usersRouter, loginRouter, authorsRouter } from './routes';
+import { blogsRouter, usersRouter, loginRouter, authorsRouter, readinglistRouter } from './routes';
 
 import { unknownEndpoint, errorHandler } from './util/middleware';
 
@@ -14,6 +14,7 @@ app.use('/api/blogs', blogsRouter);
 app.use('/api/authors', authorsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/readinglists', readinglistRouter);
 
 app.use(unknownEndpoint);
 app.use(errorHandler);

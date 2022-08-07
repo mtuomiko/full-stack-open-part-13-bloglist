@@ -32,3 +32,14 @@ export interface TokenData extends JwtPayload {
   username: string,
   id: number
 }
+
+/* readings (reading list entries) */
+
+export interface NewReadingRequest {
+  blog_id: number;
+  user_id: number;
+}
+
+export interface UpdateReadingRequest {
+  read: boolean;
+}
