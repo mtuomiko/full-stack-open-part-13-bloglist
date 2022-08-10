@@ -71,7 +71,13 @@ export const create: RequestHandler = async (req, res) => {
 export const blogFinder: RequestHandler = async (req, _res, next) => {
   // TODO: handle conversion errors or non-ints here
   const id = Number(req.params.id);
-  const blog = await Blog.findByPk(id);
+  const blog = await Blog.findByPk(id, {
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      attributes: ['id', 'username', 'name'],
+    },
+  });
 
   if (blog) { req.blog = blog; }
 
@@ -93,7 +99,9 @@ export const updateLikes: RequestHandler = async (req, res) => {
   if (!req.blog) { throw { name: 'NotFound' }; }
 
   const updateRequest = toUpdateBlogRequest(req.body);
-  const updatedBlog = await req.blog.update({ likes: updateRequest.likes });
+  const updatedBlog = await req.blog.update({ likes: updateRequest.likes }, {
+
+  });
 
   res.json(updatedBlog);
 };

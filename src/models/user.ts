@@ -6,6 +6,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare name: string;
   declare username: string;
   declare passwordHash: string;
+  declare enabled: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -31,6 +32,11 @@ User.init(
     passwordHash: {
       type: DataTypes.TEXT,
       allowNull: false,
+    },
+    enabled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     },
     createdAt: {
       type: DataTypes.DATE,

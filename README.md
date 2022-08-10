@@ -9,6 +9,7 @@ FSO course [part 13](https://fullstackopen.com/en/part13). Using TypeScript in
 * `lint` eslint
 * `start` run built main entrypoint from `/build/`
 * `cli` run built CLI (exercise 13.3) from `/build/`
+* `migration:down` revert previous migration (migrations stored at `src/migrations`)
 
 ## Environment variables (can be defined in `.env` file) 
 

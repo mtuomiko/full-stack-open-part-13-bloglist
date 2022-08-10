@@ -100,6 +100,7 @@ const createUserResponse = (user: User) => {
     id: user.id,
     username: user.username,
     name: user.name,
+    enabled: user.enabled,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };

@@ -30,7 +30,8 @@ export interface LoginRequest {
 
 export interface TokenData extends JwtPayload {
   username: string,
-  id: number
+  id: number,
+  sessionId: number,
 }
 
 /* readings (reading list entries) */

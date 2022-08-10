@@ -1,3 +1,5 @@
+// require('ts-node/register');
+
 import { Sequelize } from 'sequelize';
 import { Umzug, SequelizeStorage } from 'umzug';
 import { DB_URL } from './config';
@@ -38,6 +40,11 @@ const runMigrations = async () => {
   });
 };
 
+const rollbackMigration = async () => {
+  await sequelize.authenticate();
+  await umzug.down();
+};
+
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
@@ -56,5 +63,6 @@ const setLogging = (loggingValue: boolean) => {
 export {
   connectToDatabase,
   setLogging,
+  rollbackMigration,
   sequelize,
 };
