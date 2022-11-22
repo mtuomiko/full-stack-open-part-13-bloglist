@@ -2,6 +2,8 @@
 
 FSO course [part 13](https://fullstackopen.com/en/part13).
 
+Application used to be hosted on Heroku free dynos under a generated app name `fathomless-temple-70721`. Currently not hosted anywhere.
+
 ## NPM commands
 
 * `tsc` compile TypeScript to `build/`
